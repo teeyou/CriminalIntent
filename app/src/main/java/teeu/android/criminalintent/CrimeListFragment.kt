@@ -11,8 +11,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 private const val TAG = "CrimeListFragment"
@@ -47,6 +49,10 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView = view.findViewById(R.id.crime_recycler_view) as RecyclerView
         crimeRecyclerView.layoutManager =
             LinearLayoutManager(context) //RecyclerView를 생성하면 반드시 layoutManager를 설정해줘야함
+
+        val decoration = DividerItemDecoration(context, VERTICAL)
+        crimeRecyclerView.addItemDecoration(decoration)
+
         crimeRecyclerView.adapter = CrimeAdapter(crimeListViewModel.crimes)
         return view
     }
