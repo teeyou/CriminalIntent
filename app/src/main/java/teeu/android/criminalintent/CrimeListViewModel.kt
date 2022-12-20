@@ -29,5 +29,4 @@ class CrimeListViewModel : ViewModel() {
             crimeRepository.insertCrime(crime)
         }
     }
-
 }

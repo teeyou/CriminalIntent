@@ -1,5 +1,6 @@
 package teeu.android.criminalintent
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -27,6 +28,14 @@ private const val TAG = "CrimeListFragment"
 // Activity가 다른 Fragment로 대체될 때 Fragment와 ViewModel은 같이 소멸
 // 하지만 Fragment를 backstack에 추가를 하면, 소멸되지 않고 남아있게 됨
 class CrimeListFragment : Fragment() {
+    // 하나의 Activity에서 여러개의 Fragment 전환할 때 Callbacks 사용
+    // onAttach , onDetatch override 해야함
+    // Fragment를 호스팅하는 Activity는 이 Callbacks interface를 반드시 구현해야함
+    interface Callbacks {
+        fun onCrimeSelected(crimeId : UUID)
+    }
+
+    private var callbacks : Callbacks? = null
     private lateinit var crimeRecyclerView: RecyclerView
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
@@ -40,6 +49,15 @@ class CrimeListFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,21 +73,6 @@ class CrimeListFragment : Fragment() {
         crimeRecyclerView.adapter = adapter
 //        updateUI(crimeListViewModel.crimes)
 
-        crimeListViewModel.insertCrime(Crime(title = "Crime #0"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #1"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #2"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #3"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #4"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #5"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #6"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #7"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #8"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #9"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #10"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #11"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #12"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #13"))
-        crimeListViewModel.insertCrime(Crime(title = "Crime #14"))
         return view
     }
 
@@ -134,9 +137,11 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(p0: View?) {
-            val toast = Toast.makeText(context, "${crime.title} pressed!",Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.CENTER,Gravity.AXIS_X_SHIFT,Gravity.AXIS_Y_SHIFT)
-            toast.show()
+//            val toast = Toast.makeText(context, "${crime.title} pressed!",Toast.LENGTH_SHORT)
+//            toast.setGravity(Gravity.CENTER,Gravity.AXIS_X_SHIFT,Gravity.AXIS_Y_SHIFT)
+//            toast.show()
+
+            callbacks?.onCrimeSelected(crime.id)
         }
     }
 

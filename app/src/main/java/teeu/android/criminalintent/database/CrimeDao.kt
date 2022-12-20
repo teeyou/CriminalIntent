@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import teeu.android.criminalintent.Crime
 import java.util.*
 
@@ -19,4 +20,7 @@ interface CrimeDao {
 
     @Insert
     fun insertCrime(crime : Crime)
+
+    @Update
+    fun updateCrime(crime : Crime)
 }
