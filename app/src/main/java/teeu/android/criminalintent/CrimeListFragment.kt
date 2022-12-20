@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "CrimeListFragment"
 
@@ -28,16 +32,12 @@ class CrimeListFragment : Fragment() {
         ViewModelProvider(this).get(CrimeListViewModel::class.java)
     }
 
+    private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
+
     companion object {
         fun newInstance(): CrimeListFragment {
             return CrimeListFragment()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total crimes : ${crimeListViewModel.crimes.size}")
-
     }
 
     override fun onCreateView(
@@ -52,16 +52,46 @@ class CrimeListFragment : Fragment() {
 
         val decoration = DividerItemDecoration(context, VERTICAL)
         crimeRecyclerView.addItemDecoration(decoration)
+        crimeRecyclerView.adapter = adapter
+//        updateUI(crimeListViewModel.crimes)
 
-        crimeRecyclerView.adapter = CrimeAdapter(crimeListViewModel.crimes)
+        crimeListViewModel.insertCrime(Crime(title = "Crime #0"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #1"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #2"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #3"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #4"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #5"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #6"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #7"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #8"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #9"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #10"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #11"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #12"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #13"))
+        crimeListViewModel.insertCrime(Crime(title = "Crime #14"))
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeListViewModel.crimeListLiveData.observe(
+            viewLifecycleOwner, androidx.lifecycle.Observer { crimes ->
+                crimes?.let {
+                    Log.d(TAG, "Got crimes ${crimes.size}")
+                    updateUI(crimes)
+                }
+            }
+        )
+    }
+    private fun updateUI(crimes: List<Crime>) {
+        crimeRecyclerView.adapter = CrimeAdapter(crimes)
+    }
     private inner class CrimeButtonHolder(view : View) : ViewHolder(view), View.OnClickListener {
-        lateinit var crime : Crime
-        val titleTextView: TextView = view.findViewById(R.id.crime_title)
-        val dateTextView: TextView = view.findViewById(R.id.crime_date)
-        val challengeButton : Button = view.findViewById(R.id.challenge_button)
+        private lateinit var crime : Crime
+        private val titleTextView: TextView = view.findViewById(R.id.crime_title)
+        private val dateTextView: TextView = view.findViewById(R.id.crime_date)
+        private val challengeButton : Button = view.findViewById(R.id.challenge_button)
 
         init {
             view.setOnClickListener(this)
@@ -85,16 +115,22 @@ class CrimeListFragment : Fragment() {
 
     private inner class CrimeHolder(view: View) : ViewHolder(view),
         View.OnClickListener {
-        lateinit var crime : Crime
-        val titleTextView: TextView = view.findViewById(R.id.crime_title)
-        val dateTextView: TextView = view.findViewById(R.id.crime_date)
+        private lateinit var crime : Crime
+        private val titleTextView: TextView = view.findViewById(R.id.crime_title)
+        private val dateTextView: TextView = view.findViewById(R.id.crime_date)
+        private val solvedImageView : ImageView = view.findViewById(R.id.crime_solved)
+
         init {
             view.setOnClickListener(this)
         }
         fun bind(crime: Crime) {
             this.crime = crime
             titleTextView.text = this.crime.title
-            dateTextView.text = this.crime.date.toString()
+//            dateTextView.text = this.crime.date.toString()
+            val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss") //요일, 월, 일, 년, 시:분:초
+            dateTextView.text = date.format(Calendar.getInstance().time).toString()
+
+            solvedImageView.visibility = if(crime.isSolved) View.VISIBLE else View.GONE
         }
 
         override fun onClick(p0: View?) {

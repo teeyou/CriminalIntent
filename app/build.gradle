@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -33,6 +34,7 @@ android {
 }
 
 dependencies {
+    def room_version = "2.4.3"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -45,4 +47,14 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // room coroution 사용
+    implementation "androidx.room:room-ktx:2.4.3"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 }
