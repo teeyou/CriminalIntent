@@ -1,4 +1,4 @@
-# 2022.12.20
+# 2022.12.20 12장까지 완료
 ### RecyclerView 에서 서로 다른 list_item을 보여주고 싶을 때
 - layout, ViewHolder 따로 만들어서 viewType에 따라 보여주도록 하면 됨 
 
@@ -36,6 +36,10 @@
 ### Application() 클래스
 - activity 생성 전에 먼저 생성됨. 전역 상태 초기화할 때 사용
 - 따로 Application 클래스를 상속받은 클래스를 만들면 manifests에 application 안에 android:name 설정해야함
+
+### ListAdapter이용해서 RecyclerView 효율적으로 사용하기
+- DiffUtill.ItemCallback<T>을 구현하고,
+- ListAdapter를 적용해서 submitList(mutableList)을 쓰면 바뀐 item만 채워서 보여줌
 
 ### 이외에
 - layout이 중첩되면 속도가 느려짐. 그래서 복잡한 layout 구성할 때 constraint layout이 좋음
