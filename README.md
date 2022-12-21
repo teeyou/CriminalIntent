@@ -40,3 +40,4 @@
 ### 이외에
 - layout이 중첩되면 속도가 느려짐. 그래서 복잡한 layout 구성할 때 constraint layout이 좋음
 - val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss") //요일, 월, 일, 년, 시:분:초
+- Room 사용시 build.gradle에서 plugins {id 'kotlin-kapt'} 추가하기
