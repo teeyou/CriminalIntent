@@ -9,37 +9,37 @@
 
 ### Fragment
 - Fragment가 인자를 가지고 생성되려면 companion object 안에 newInstance(args)를 정의해서 Bundle객체를 만들어서 arguemnts를 세팅함
-- 생명주기
-- onCreate (데이터 읽어옴) -> 
-- onCreateView (inflate) -> 
-- onViewCreated (UI로직 처리)
+- 생명주기   
+onCreate (데이터 읽어옴) ->   
+onCreateView (inflate) ->    
+onViewCreated (UI로직 처리)   
 
 ### 로컬데이터베이스 Room 구현
-- Repository - 싱글톤 패턴적용
-- 싱글톤은 activity, fragment보다 생명주기가 더 길다. 장치 회전시에도 여전히 존재함 
-- Database에 접근하려면 스레드를 만들어서 백그라운드에서 수행해야함 (오래 걸리는 작업들이 이러함)
-- UI는 main thread에서만 변경가능
+- Repository - 싱글톤 패턴적용   
+싱글톤은 activity, fragment보다 생명주기가 더 길다. 장치 회전시에도 여전히 존재함    
+Database에 접근하려면 스레드를 만들어서 백그라운드에서 수행해야함 (오래 걸리는 작업들이 이러함)
+UI는 main thread에서만 변경가능   
 
 ### LiveData - 데이터 전달을 쉽게 만드는 것이 목표
-- 다른 스레드간에 전달 가능(백그라운드 <-> main)
-- LiveData를 관찰해서 변경되면 view도 변경
-- LiveData를 쓰면 데이터베이스에서 읽어올때 알아서 백그라운드 스레드로 실행
-- 하지만 insert, update는 알아서 하지 않음. 책에서는 Executors를 사용함. 
-- 나는 ViewModel에서 제공하는 coroutine 사용
+- 다른 스레드간에 전달 가능(백그라운드 <-> main)   
+LiveData를 관찰해서 변경되면 view도 변경
+LiveData를 쓰면 데이터베이스에서 읽어올때 알아서 백그라운드 스레드로 실행   
+하지만 insert, update는 알아서 하지 않음. 책에서는 Executors를 사용함.    
+나는 ViewModel에서 제공하는 coroutine 사용   
 
 ### TypeConverter
-- table에 저장할 때 일반 datatype을 씀
-- Date, UUID와 같은 type은 TypeConverter를 써서 
-- db에 넣을 때 쓰는 type과 
-- db에서 꺼내서 쓸 때 type으로 바꿔준다
+- table에 저장할 때 일반 datatype을 씀   
+Date, UUID와 같은 type은 TypeConverter를 써서    
+db에 넣을 때 쓰는 type과    
+db에서 꺼내서 쓸 때 type으로 바꿔준다
 
 ### Application() 클래스
 - activity 생성 전에 먼저 생성됨. 전역 상태 초기화할 때 사용
 - 따로 Application 클래스를 상속받은 클래스를 만들면 manifests에 application 안에 android:name 설정해야함
 
 ### ListAdapter이용해서 RecyclerView 효율적으로 사용하기
-- DiffUtill.ItemCallback<T>을 구현하고,
-- ListAdapter를 적용해서 submitList(mutableList)을 쓰면 바뀐 item만 채워서 보여줌
+- DiffUtill.ItemCallback<T>을 구현하고,    
+ListAdapter를 적용해서 submitList(mutableList)을 쓰면 바뀐 item만 채워서 보여줌
 
 ### 이외에
 - layout이 중첩되면 속도가 느려짐. 그래서 복잡한 layout 구성할 때 constraint layout이 좋음
@@ -50,6 +50,7 @@
 - intent extra - Activity 간의 데이터 전달
 - callback interface - Fragment -> Activity 데이터 전달
 - newInstance(args) - Activity -> Fragment 데이터 전달
+
 ## 같은 Activity에 의해 호스팅되는 Fragment 간의 데이터 전달
 - setTargetFragment . targetFragment 를 썼지만 deprecated 됨
 - setFragmentResultListener(데이터 받음), setFragmentResult(데이터 보냄) 로 대체
@@ -58,6 +59,17 @@
 - res -> image asset -> Action Bar and Tab Icons설정 후 Clip Art에서 선택해서 이미지 만들면 해상도 별로 쓰이는 파일이 다 만들어짐
 
 ## 암시적 인텐트
-- 매니페스트에서 intent-filter 안에 아래와 같이 작성하게 되면,
-- <action android:name="android.intent.action.VIEW"/> -> 해당 앱은 웹페이지를 보는 앱이라는 것을 안드로이드 운영체제에게 알림
-- <category android:name="android.intent.category.DEFAULT"/> -> 이걸 작성해야 다른 앱으로 부터 호출하는 암시적 인텐트를 받겠다는 의미
+- 매니페스트에서 intent-filter 안에 아래와 같이 작성하게 되면,   
+action android:name="android.intent.action.VIEW" -> 해당 앱은 웹페이지를 보는 앱이라는 것을 안드로이드 운영체제에게 알림   
+category android:name="android.intent.category.DEFAULT" -> 이걸 작성해야 다른 앱으로 부터 호출하는 암시적 인텐트를 받겠다는 의미   
+
+## 부수적인 것들
+- res -> image asset -> Action Bar and Tab Icons설정 후 Clip Art에서 선택해서 만들면 해상도 별로 쓰이는 파일이 다 만들어짐    
+- 다른 앱과 파일을 공유하거나 받으려면 ContentProvider를 써야함. uri로부터 파일을 다운로드하거나 쓸 수있고, 제어할 수도 있다    
+  다른 앱으로부터 파일을 받는 것만 한다면 FileProvider라는 편의 클래스 사용. 매니페스트에 선언해야함    
+- 매니페스트에 사용하는 장치 기능 선언해줘야 한다.   
+  해당 앱이 NFC기능을 사용하는데, 설치하는 디바이스에 해당 기능이 없다면 설치를 못하게 할 수도 있음    
+  uses-feacture android:name="장치기능" android:required="false"    
+  required를 false로 하면 해당 기능이 없는 디바이스도 사용할 수 있다는 의미     
+- values 에서 파일만들 때 Locale을 선택하면 지역화 가능   
+- TalkBack 설치하면 음성안내 가능
