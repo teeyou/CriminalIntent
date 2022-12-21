@@ -57,3 +57,7 @@
 - Fragment에서 쓰는 onCreateOptionsMenu, onOptionsItemSelected, setHasOptionsMenu 전부 deprecated 됨
 - res -> image asset -> Action Bar and Tab Icons설정 후 Clip Art에서 선택해서 이미지 만들면 해상도 별로 쓰이는 파일이 다 만들어짐
 
+## 암시적 인텐트
+- 매니페스트에서 intent-filter 안에 아래와 같이 작성하게 되면,
+- <action android:name="android.intent.action.VIEW"/> -> 해당 앱은 웹페이지를 보는 앱이라는 것을 안드로이드 운영체제에게 알림
+- <category android:name="android.intent.category.DEFAULT"/> -> 이걸 작성해야 다른 앱으로 부터 호출하는 암시적 인텐트를 받겠다는 의미
