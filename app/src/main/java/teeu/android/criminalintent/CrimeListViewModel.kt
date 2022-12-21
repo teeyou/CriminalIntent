@@ -13,16 +13,16 @@ class CrimeListViewModel : ViewModel() {
         crimeRepository.getCrimes()
     }
 
-    init {
-        for (i in 0 until 100) {
-            val crime = Crime()
-            crime.title = "Crime #$i"
-            crime.isSolved = i % 2 == 0
-            crime.button = i % 3 == 0
-//            crimes.add(crime)
-            crimes += crime
-        }
-    }
+//    init {
+//        for (i in 0 until 100) {
+//            val crime = Crime()
+//            crime.title = "Crime #$i"
+//            crime.isSolved = i % 2 == 0
+//            crime.button = i % 3 == 0
+////            crimes.add(crime)
+//            crimes += crime
+//        }
+//    }
 
     fun insertCrime(crime : Crime) {
         viewModelScope.launch(Dispatchers.IO) {

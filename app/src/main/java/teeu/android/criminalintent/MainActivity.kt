@@ -2,6 +2,7 @@ package teeu.android.criminalintent
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.MenuProvider
 import java.util.*
 
 class MainActivity : AppCompatActivity() , CrimeListFragment.Callbacks {

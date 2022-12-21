@@ -10,9 +10,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.DatePicker
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import java.text.SimpleDateFormat
 import java.util.*
 
 //Fragment Lifecycle
@@ -20,6 +24,7 @@ import java.util.*
 // onStart -> onResume -> onPause -> onStop -> onDestroyView ->
 // Activity종료 -> onDestroy -> onDetach
 
+private const val DIALOG_DATE ="DialogDate"
 private const val ARG_KEY = "crime_id"
 class CrimeFragment : Fragment() {
     private lateinit var crime : Crime
@@ -45,6 +50,12 @@ class CrimeFragment : Fragment() {
         val crimeId = arguments?.getSerializable(ARG_KEY) as UUID
         Log.d("MYTAG", "crimeId : " + crimeId)
         crimeDetailViewModel.loadCrime(crimeId)
+
+        setFragmentResultListener("requestKey") { key, bundle ->
+            val date = bundle.getSerializable("bundleKey") as Date
+            crime.date = date
+            updateUI()
+        }
     }
 
     override fun onCreateView(
@@ -98,6 +109,12 @@ class CrimeFragment : Fragment() {
         solvedCheckBox.setOnCheckedChangeListener { _, isCheck ->
             crime.isSolved = isCheck
         }
+
+        dateButton.setOnClickListener {
+            DatePickerFragment.newInstance(crime.date).apply {
+                show(this@CrimeFragment.parentFragmentManager,DIALOG_DATE)
+            }
+        }
     }
 
     override fun onStop() {
@@ -107,16 +124,14 @@ class CrimeFragment : Fragment() {
 
     private fun updateUI() {
         titleField.setText(crime.title)
-        dateButton.setText(crime.date.toString())
+//        dateButton.setText(crime.date.toString())
+        val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss").format(crime.date)
+        dateButton.setText(date.toString())
 
-//        dateButton.isEnabled = false
-//        dateButton.jumpDrawablesToCurrentState()
         dateButton.apply {
             isEnabled = true
             jumpDrawablesToCurrentState() //애니메이션 효과 끄기인데 isEnabled = false로 바꿨을 때 제대로 동작 안하네...
         }
-//        solvedCheckBox.isChecked = crime.isSolved
-//        solvedCheckBox.jumpDrawablesToCurrentState()
         solvedCheckBox.apply {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()

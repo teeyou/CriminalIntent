@@ -3,10 +3,7 @@ package teeu.android.criminalintent
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -60,6 +57,27 @@ class CrimeListFragment : Fragment() {
         callbacks = null
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        val inflater: MenuInflater = inflater
+        inflater.inflate(R.menu.fragment_crime_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.new_crime -> {
+                val crime = Crime()
+                crimeListViewModel.insertCrime(crime)
+                callbacks?.onCrimeSelected(crime.id)
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -138,9 +156,11 @@ class CrimeListFragment : Fragment() {
             this.crime = crime
             titleTextView.text = this.crime.title
 //            dateTextView.text = this.crime.date.toString()
-            val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss") //요일, 월, 일, 년, 시:분:초
-            dateTextView.text = date.format(Calendar.getInstance().time).toString()
+            val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss").format(this.crime.date)
+            dateTextView.text = date
 
+//            val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss") //요일, 월, 일, 년, 시:분:초
+//            dateTextView.text = date.format(Calendar.getInstance().time).toString()
             solvedImageView.visibility = if (crime.isSolved) View.VISIBLE else View.GONE
         }
 
@@ -178,7 +198,7 @@ class CrimeListFragment : Fragment() {
             else if (holder is CrimeButtonHolder)
                 holder.bind(crime)
 
-            Log.d("MYTAG", "onBindViewHolder 호출")
+//            Log.d("MYTAG", "onBindViewHolder 호출")
         }
 
         override fun getItemCount(): Int = crimes.size
