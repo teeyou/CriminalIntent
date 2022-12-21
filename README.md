@@ -45,3 +45,15 @@
 - layout이 중첩되면 속도가 느려짐. 그래서 복잡한 layout 구성할 때 constraint layout이 좋음
 - val date = SimpleDateFormat("EEEE, MMM, dd, yyyy HH:mm:ss") //요일, 월, 일, 년, 시:분:초
 - Room 사용시 build.gradle에서 plugins {id 'kotlin-kapt'} 추가하기
+
+# 2022.12.21 14장까지 완료
+- intent extra - Activity 간의 데이터 전달
+- callback interface - Fragment -> Activity 데이터 전달
+- newInstance(args) - Activity -> Fragment 데이터 전달
+## 같은 Activity에 의해 호스팅되는 Fragment 간의 데이터 전달
+- setTargetFragment . targetFragment 를 썼지만 deprecated 됨
+- setFragmentResultListener(데이터 받음), setFragmentResult(데이터 보냄) 로 대체
+#
+- Fragment에서 쓰는 onCreateOptionsMenu, onOptionsItemSelected, setHasOptionsMenu 전부 deprecated 됨
+- res -> image asset -> Action Bar and Tab Icons설정 후 Clip Art에서 선택해서 이미지 만들면 해상도 별로 쓰이는 파일이 다 만들어짐
+
